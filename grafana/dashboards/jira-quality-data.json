@@ -34,7 +34,7 @@
     },
     {
       "datasource": "influxdb",
-      "description": "Bugs that were opened in the first sprint in which they appeared are considered.",
+      "description": "Squad",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -100,7 +100,7 @@
           ],
           "orderByTime": "ASC",
           "policy": "default",
-          "query": "select count(issueName) from jira_bug group by sprint",
+          "query": "select count(issueName) from jira_bug group by rootcause",
           "queryType": "randomWalk",
           "rawQuery": true,
           "refId": "A",
@@ -124,7 +124,7 @@
       ],
       "timeFrom": null,
       "timeShift": null,
-      "title": "Created bugs",
+      "title": "Bugs by Squad",
       "transformations": [],
       "type": "bargauge"
     },
