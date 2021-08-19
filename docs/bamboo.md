@@ -6,6 +6,7 @@
   "user": "User Bamboo",
   "key": "User Key",
   "bambooServer": "Server IP Address",
+  "cron": "*/5 * * * *",
   "projects": [
     "Name of the projects in the Atlassian Bamboo"
   ]

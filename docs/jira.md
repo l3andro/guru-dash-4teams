@@ -5,6 +5,7 @@
 {
   "user": "User Jira",
   "key": "User Key",
+  "cron": "*/5 * * * *",
   "url": "Url Jira",
   "apiVersion": "Api Version",
   "queries": [

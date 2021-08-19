@@ -6,6 +6,7 @@
   "key": "123",
   "organization": "Your Organization",
   "project": "Your Project",
+  "cron": "*/5 * * * *",
   "releases": [
     "Name of the stages in the pipeline that should be considered as deploys"
   ],

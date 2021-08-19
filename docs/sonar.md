@@ -5,6 +5,7 @@
 {
   "key": "123",
   "url": "URL Sonar",
+  "cron": "*/5 * * * *",
   "projects": [
     "project keys"
   ],
