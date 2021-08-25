@@ -25,3 +25,17 @@ export interface IJiraQueryResposeSprint {
   name: string;
   state: string;
 }
+
+export interface IJiraLeadTime {
+  histories: IJiraLeadTimeHist[];
+}
+
+export interface IJiraLeadTimeHist {
+  created: any;
+  items: IJiraLeadTimeHistItems[];
+}
+
+export interface IJiraLeadTimeHistItems {
+  fromString: string;
+  toString: string;
+}
