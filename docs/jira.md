@@ -49,6 +49,30 @@
         }
       ]
     }
+    ,
+    {
+      "name": "jira_issue",
+      "type": "ISSUE",
+      "description": "Query Description",
+      "filter": "JQL Get all issues to get logged hours (Ex: "project=P2M and status not in (Cancelado, Cancelada))",
+      "customFields": [
+        {
+          "key": "Customfield key for sprint (Ex: customfield_10000)",
+          "name": "sprint",
+          "defaultValue": "Not classified"
+        },
+        {
+          "key": "Customfield key for sprint (Ex: customfield_10000)",
+          "name": "squad",
+          "defaultValue": "Not classified"
+        },
+        {
+          "key": "Customfield key for sprint (Ex: customfield_10000)",
+          "name": "category",
+          "defaultValue": "Not classified"
+        }
+      ]
+    }
   ]
 }
 ```
@@ -82,6 +106,7 @@ New types of queries can be implemented, for that it is enough:
 const queries: Record<string, JiraProviderFunction> = {
     BUG: getJiraBugs,
     HOUR: getJiraHours,
+    ISSUE: getJiraIssues,
 };
 ```
 
@@ -93,7 +118,8 @@ const queries: Record<string, JiraProviderFunction> = {
 ```
 export const fieldsByQueryType: Record<string,string>  = {
     BUG: "issuekey, summary, status, issuetype, created, resolutiondate",
-    HOUR: "created, timespent, issuetype, issuekey, summary"
+    HOUR: "created, timespent, issuetype, issuekey, summary",
+    ISSUE: "issuekey, status, issuetype, created, resolutiondate, changelog"
 };
 ```
 **IMPORTANT: Your jira preferred language must be English (Because dash filter use conditions "status='Done'").**
