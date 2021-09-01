@@ -5,7 +5,7 @@ async function main() {
   try {
     await syncMetrics();
   } catch (err) {
-    logger.error('Error running process');
+    logger.error(`Error running main process: --->>> ${err}`);
   }
 }
 
