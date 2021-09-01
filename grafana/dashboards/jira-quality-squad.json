@@ -1,0 +1,842 @@
+{
+    "annotations": {
+      "list": [
+        {
+          "builtIn": 1,
+          "datasource": "-- Grafana --",
+          "enable": true,
+          "hide": true,
+          "iconColor": "rgba(0, 211, 255, 1)",
+          "name": "Annotations & Alerts",
+          "type": "dashboard"
+        }
+      ]
+    },
+    "editable": true,
+    "gnetId": null,
+    "graphTooltip": 1,
+    "id": 7,
+    "iteration": 1629896603792,
+    "links": [],
+    "panels": [
+      {
+        "collapsed": false,
+        "datasource": null,
+        "gridPos": {
+          "h": 1,
+          "w": 24,
+          "x": 0,
+          "y": 0
+        },
+        "id": 4,
+        "panels": [],
+        "repeat": "squad",
+        "title": "General indicators (for all sprints and all bug phases)",
+        "type": "row"
+      },
+      {
+        "datasource": "influxdb",
+        "description": "Closed bugs (status = 'Done') are considered in the last sprint in which they appear.",
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "thresholds"
+            },
+            "links": [],
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                },
+                {
+                  "color": "red",
+                  "value": 80
+                }
+              ]
+            }
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 6,
+          "w": 8,
+          "x": 0,
+          "y": 1
+        },
+        "id": 71,
+        "options": {
+          "colorMode": "value",
+          "graphMode": "area",
+          "justifyMode": "auto",
+          "orientation": "horizontal",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "fields": "",
+            "values": false
+          },
+          "text": {},
+          "textMode": "auto"
+        },
+        "pluginVersion": "8.0.6",
+        "targets": [
+          {
+            "alias": "$tag_lastSprint",
+            "groupBy": [
+              {
+                "params": [
+                  "$__interval"
+                ],
+                "type": "time"
+              },
+              {
+                "params": [
+                  "null"
+                ],
+                "type": "fill"
+              }
+            ],
+            "orderByTime": "ASC",
+            "policy": "default",
+            "query": "select count(issueName) from jira_issue where squad=~ /^(${squad})$/ ",
+            "queryType": "randomWalk",
+            "rawQuery": true,
+            "refId": "A",
+            "resultFormat": "time_series",
+            "select": [
+              [
+                {
+                  "params": [
+                    "value"
+                  ],
+                  "type": "field"
+                },
+                {
+                  "params": [],
+                  "type": "mean"
+                }
+              ]
+            ],
+            "tags": []
+          }
+        ],
+        "timeFrom": null,
+        "timeShift": null,
+        "title": "Quantidade PBIs",
+        "transformations": [],
+        "type": "stat"
+      },
+      {
+        "datasource": "-- Mixed --",
+        "description": "",
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "thresholds"
+            },
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "semi-dark-blue",
+                  "value": null
+                }
+              ]
+            },
+            "unit": "ms"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 6,
+          "w": 8,
+          "x": 8,
+          "y": 1
+        },
+        "id": 119,
+        "options": {
+          "colorMode": "value",
+          "graphMode": "area",
+          "justifyMode": "auto",
+          "orientation": "auto",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "fields": "",
+            "values": false
+          },
+          "text": {},
+          "textMode": "auto"
+        },
+        "pluginVersion": "8.0.6",
+        "repeat": "sprint",
+        "targets": [
+          {
+            "alias": "avg",
+            "datasource": "influxdb",
+            "groupBy": [
+              {
+                "params": [
+                  "$__interval"
+                ],
+                "type": "time"
+              },
+              {
+                "params": [
+                  "null"
+                ],
+                "type": "fill"
+              }
+            ],
+            "hide": false,
+            "orderByTime": "ASC",
+            "policy": "default",
+            "query": "SELECT mean(leadTimeTotal)  FROM jira_issue where leadTimeTotal > 0 AND squad =~ /^(${squad})$/",
+            "queryType": "randomWalk",
+            "rawQuery": true,
+            "refId": "B",
+            "resultFormat": "time_series",
+            "select": [
+              [
+                {
+                  "params": [
+                    "value"
+                  ],
+                  "type": "field"
+                },
+                {
+                  "params": [],
+                  "type": "mean"
+                }
+              ]
+            ],
+            "tags": []
+          }
+        ],
+        "timeFrom": null,
+        "timeShift": null,
+        "title": "Lead Time AVG",
+        "transformations": [
+          {
+            "id": "calculateField",
+            "options": {
+              "alias": "Rework",
+              "binary": {
+                "left": "Bug hours",
+                "operator": "/",
+                "reducer": "sum",
+                "right": "Logged hours"
+              },
+              "mode": "binary",
+              "reduce": {
+                "reducer": "sum"
+              },
+              "replaceFields": true
+            }
+          }
+        ],
+        "type": "stat"
+      },
+      {
+        "datasource": "influxdb",
+        "description": "Considered the average time worked for all bugs that are 'Done'",
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "thresholds"
+            },
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "semi-dark-blue",
+                  "value": null
+                }
+              ]
+            },
+            "unit": "ms"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 6,
+          "w": 8,
+          "x": 16,
+          "y": 1
+        },
+        "id": 83,
+        "options": {
+          "colorMode": "value",
+          "graphMode": "area",
+          "justifyMode": "auto",
+          "orientation": "auto",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "fields": "",
+            "values": false
+          },
+          "text": {},
+          "textMode": "auto"
+        },
+        "pluginVersion": "8.0.6",
+        "targets": [
+          {
+            "groupBy": [
+              {
+                "params": [
+                  "$__interval"
+                ],
+                "type": "time"
+              },
+              {
+                "params": [
+                  "null"
+                ],
+                "type": "fill"
+              }
+            ],
+            "orderByTime": "ASC",
+            "policy": "default",
+            "query": "SELECT max(leadTimeTotal)  FROM jira_issue where leadTimeTotal > 0 AND squad =~ /^(${squad})$/",
+            "queryType": "randomWalk",
+            "rawQuery": true,
+            "refId": "A",
+            "resultFormat": "time_series",
+            "select": [
+              [
+                {
+                  "params": [
+                    "value"
+                  ],
+                  "type": "field"
+                },
+                {
+                  "params": [],
+                  "type": "mean"
+                }
+              ]
+            ],
+            "tags": []
+          }
+        ],
+        "timeFrom": null,
+        "timeShift": null,
+        "title": "Lead Time Worst Case",
+        "type": "stat"
+      },
+      {
+        "datasource": "influxdb",
+        "description": "Squad of all bugs for all sprints of all phases",
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "thresholds"
+            },
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                },
+                {
+                  "color": "#EAB839",
+                  "value": 80
+                }
+              ]
+            },
+            "unit": "ms"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 7,
+          "w": 24,
+          "x": 0,
+          "y": 7
+        },
+        "id": 33,
+        "options": {
+          "displayMode": "lcd",
+          "orientation": "vertical",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "fields": "",
+            "values": true
+          },
+          "showUnfilled": true,
+          "text": {}
+        },
+        "pluginVersion": "8.0.6",
+        "targets": [
+          {
+            "alias": "",
+            "groupBy": [
+              {
+                "params": [
+                  "$__interval"
+                ],
+                "type": "time"
+              },
+              {
+                "params": [
+                  "null"
+                ],
+                "type": "fill"
+              }
+            ],
+            "orderByTime": "ASC",
+            "policy": "default",
+            "query": "SELECT mean(leadTimeAnalise) as \"Análise\", mean(leadTimeReadyDiscover) as \"Pronto Descoberta\", mean(leadTimeBacklog) as \"Backlog\",mean(leadTimeDiscover) as \"Descoberta\", mean(leadTimeReadyDevelop) as \"Pronto Desenv\",mean(leadTimeDevelop) as \"Desenvolvimento\",mean(leadTimeDevelopDone) as \"Desenv Concluido\",mean(leadTimeSitUatRegress) as \"SIT UAT Regressivo\",\nmean(leadTimeReadyImplement) as \"Pronto Implantação\",mean(leadTimePilot) as \"Piloto\",mean(leadTimeDone) as \"Concluido\" FROM jira_issue where squad=~ /^(${squad})$/",
+            "queryType": "randomWalk",
+            "rawQuery": true,
+            "refId": "A",
+            "resultFormat": "table",
+            "select": [
+              [
+                {
+                  "params": [
+                    "value"
+                  ],
+                  "type": "field"
+                },
+                {
+                  "params": [],
+                  "type": "mean"
+                }
+              ]
+            ],
+            "tags": []
+          }
+        ],
+        "title": "Lead Time Transition Track",
+        "type": "bargauge"
+      },
+      {
+        "collapsed": false,
+        "datasource": null,
+        "gridPos": {
+          "h": 1,
+          "w": 24,
+          "x": 0,
+          "y": 322
+        },
+        "id": 148,
+        "panels": [],
+        "title": "Dataset from this dashboard (for all sprints and all bug phases)",
+        "type": "row"
+      },
+      {
+        "datasource": "influxdb",
+        "description": "",
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "thresholds"
+            },
+            "custom": {
+              "align": "left",
+              "displayMode": "auto",
+              "filterable": true
+            },
+            "links": [
+              {
+                "targetBlank": true,
+                "title": "",
+                "url": "https://jiracielo.atlassian.net/browse/${__data.fields[1]}"
+              }
+            ],
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                },
+                {
+                  "color": "red",
+                  "value": 80
+                }
+              ]
+            }
+          },
+          "overrides": [
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "Time"
+              },
+              "properties": [
+                {
+                  "id": "unit",
+                  "value": "dateTimeAsLocal"
+                },
+                {
+                  "id": "displayName",
+                  "value": "Created At"
+                },
+                {
+                  "id": "custom.displayMode",
+                  "value": "color-text"
+                },
+                {
+                  "id": "color",
+                  "value": {
+                    "fixedColor": "dark-green",
+                    "mode": "fixed"
+                  }
+                },
+                {
+                  "id": "custom.width",
+                  "value": 200
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "bugWorklogTime"
+              },
+              "properties": [
+                {
+                  "id": "unit",
+                  "value": "s"
+                },
+                {
+                  "id": "displayName",
+                  "value": "Worklog Time"
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "deltaTimeToResolveBug"
+              },
+              "properties": [
+                {
+                  "id": "unit",
+                  "value": "ms"
+                },
+                {
+                  "id": "displayName",
+                  "value": "Time to Resolve Bug"
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "issueName"
+              },
+              "properties": [
+                {
+                  "id": "displayName",
+                  "value": "Issue Key"
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "issueType"
+              },
+              "properties": [
+                {
+                  "id": "displayName",
+                  "value": "Issue Type"
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "sprint"
+              },
+              "properties": [
+                {
+                  "id": "displayName",
+                  "value": "Initial Sprint"
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "lastSprint"
+              },
+              "properties": [
+                {
+                  "id": "displayName",
+                  "value": "Last Sprint"
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "phase"
+              },
+              "properties": [
+                {
+                  "id": "displayName",
+                  "value": "Bug Phase"
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "resolutionDate"
+              },
+              "properties": [
+                {
+                  "id": "noValue",
+                  "value": "- "
+                },
+                {
+                  "id": "unit",
+                  "value": "dateTimeAsLocal"
+                },
+                {
+                  "id": "custom.displayMode",
+                  "value": "color-text"
+                },
+                {
+                  "id": "color",
+                  "value": {
+                    "fixedColor": "blue",
+                    "mode": "fixed"
+                  }
+                },
+                {
+                  "id": "displayName",
+                  "value": "Resolution Date"
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "squad"
+              },
+              "properties": [
+                {
+                  "id": "displayName",
+                  "value": "squad"
+                },
+                {
+                  "id": "custom.width",
+                  "value": 300
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "statusCategory"
+              },
+              "properties": [
+                {
+                  "id": "displayName",
+                  "value": "Status Category"
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "summary"
+              },
+              "properties": [
+                {
+                  "id": "displayName",
+                  "value": "Issue Title"
+                },
+                {
+                  "id": "custom.width",
+                  "value": 300
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "Status Category"
+              },
+              "properties": [
+                {
+                  "id": "custom.width",
+                  "value": 145
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "Created At"
+              },
+              "properties": [
+                {
+                  "id": "custom.width",
+                  "value": 164
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "category"
+              },
+              "properties": [
+                {
+                  "id": "displayName",
+                  "value": "Category"
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "status"
+              },
+              "properties": [
+                {
+                  "id": "displayName",
+                  "value": "Status"
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "leadTimeDevelop_1"
+              },
+              "properties": [
+                {
+                  "id": "custom.width",
+                  "value": 190
+                }
+              ]
+            }
+          ]
+        },
+        "gridPos": {
+          "h": 10,
+          "w": 24,
+          "x": 0,
+          "y": 323
+        },
+        "id": 150,
+        "options": {
+          "frameIndex": 13,
+          "showHeader": true,
+          "sortBy": []
+        },
+        "pluginVersion": "8.0.6",
+        "targets": [
+          {
+            "groupBy": [
+              {
+                "params": [
+                  "$__interval"
+                ],
+                "type": "time"
+              },
+              {
+                "params": [
+                  "null"
+                ],
+                "type": "fill"
+              }
+            ],
+            "orderByTime": "ASC",
+            "policy": "default",
+            "query": "SELECT * from jira_issue",
+            "queryType": "randomWalk",
+            "rawQuery": true,
+            "refId": "A",
+            "resultFormat": "table",
+            "select": [
+              [
+                {
+                  "params": [
+                    "value"
+                  ],
+                  "type": "field"
+                },
+                {
+                  "params": [],
+                  "type": "mean"
+                }
+              ]
+            ],
+            "tags": []
+          }
+        ],
+        "title": "Dataset",
+        "type": "table"
+      }
+    ],
+    "refresh": false,
+    "schemaVersion": 30,
+    "style": "dark",
+    "tags": [],
+    "templating": {
+      "list": [
+        {
+          "allValue": null,
+          "current": {
+            "selected": false,
+            "text": [
+              ""
+            ],
+            "value": [
+              ""
+            ]
+          },
+          "datasource": "influxdb",
+          "definition": "select distinct(squad) from jira_issue",
+          "description": "Select squad(s) to filter dashboard data",
+          "error": null,
+          "hide": 0,
+          "includeAll": false,
+          "label": "Squad",
+          "multi": true,
+          "name": "squad",
+          "options": [],
+          "query": "select distinct(squad) from jira_issue",
+          "refresh": 1,
+          "regex": "",
+          "skipUrlSync": false,
+          "sort": 1,
+          "tagValuesQuery": "",
+          "tagsQuery": "",
+          "type": "query",
+          "useTags": false
+        }
+      ]
+    },
+    "time": {
+      "from": "now-1y",
+      "to": "now"
+    },
+    "timepicker": {},
+    "timezone": "",
+    "title": "Quality Squad",
+    "uid": "zGhzF97nz",
+    "version": 3
+  }
