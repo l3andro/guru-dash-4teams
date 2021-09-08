@@ -90,6 +90,7 @@ async function map(url: string, apiVersion: string, authUser: string, authPass:s
       issueType: issue.fields.issuetype.name,
       statusCategory: issue.fields?.status?.statusCategory?.name || "Not classified",
       bugWorklogTime: bugWorklogTime || 0,
+      leadTimeTotal: leadTimeTotal || 0,
       leadTimeReadyDiscover: leadTimeReadyToDiscover || 0,
       leadTimeAnalise: leadTimeAnalise || 0,
       leadTimeDiscover: leadTimeDiscover || 0,
